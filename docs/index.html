@@ -1,0 +1,182 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Tracking Muscle Activation Through Layers API</title><link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"><link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"><link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,700|Inconsolata|Raleway:200"><style>/* Highlight.js Theme Tomorrow */
+.hljs-comment,.hljs-title{color:#8e908c}.hljs-variable,.hljs-attribute,.hljs-tag,.hljs-regexp,.ruby .hljs-constant,.xml .hljs-tag .hljs-title,.xml .hljs-pi,.xml .hljs-doctype,.html .hljs-doctype,.css .hljs-id,.css .hljs-class,.css .hljs-pseudo{color:#c82829}.hljs-number,.hljs-preprocessor,.hljs-pragma,.hljs-built_in,.hljs-literal,.hljs-params,.hljs-constant{color:#f5871f}.ruby .hljs-class .hljs-title,.css .hljs-rules .hljs-attribute{color:#eab700}.hljs-string,.hljs-value,.hljs-inheritance,.hljs-header,.ruby .hljs-symbol,.xml .hljs-cdata{color:#718c00}.css .hljs-hexcolor{color:#3e999f}.hljs-function,.python .hljs-decorator,.python .hljs-title,.ruby .hljs-function .hljs-title,.ruby .hljs-title .hljs-keyword,.perl .hljs-sub,.javascript .hljs-title,.coffeescript .hljs-title{color:#4271ae}.hljs-keyword,.javascript .hljs-function{color:#8959a8}.hljs{display:block;background:white;color:#4d4d4c;padding:.5em}.coffeescript .javascript,.javascript .xml,.tex .hljs-formula,.xml .javascript,.xml .vbscript,.xml .css,.xml .hljs-cdata{opacity:.5}</style><style>body,
+h4,
+h5 {
+  font-family: 'Roboto' sans-serif !important;
+}
+h1,
+h2,
+h3,
+.aglio {
+  font-family: 'Raleway' sans-serif !important;
+}
+h1 a,
+h2 a,
+h3 a,
+h4 a,
+h5 a {
+  display: none;
+}
+h1:hover a,
+h2:hover a,
+h3:hover a,
+h4:hover a,
+h5:hover a {
+  display: inline;
+}
+code {
+  color: #444;
+  background-color: #ddd;
+  font-family: 'Inconsolata' monospace !important;
+}
+a[data-target] {
+  cursor: pointer;
+}
+h4 {
+  font-size: 100%;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+.back-to-top {
+  position: fixed;
+  z-index: 1;
+  bottom: 0px;
+  right: 24px;
+  padding: 4px 8px;
+  background-color: #eee;
+  text-decoration: none !important;
+  border-top: 1px solid rgba(0,0,0,0.1);
+  border-left: 1px solid rgba(0,0,0,0.1);
+  border-right: 1px solid rgba(0,0,0,0.1);
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+}
+.panel {
+  overflow: hidden;
+}
+.panel-heading code {
+  margin-left: 3px;
+  color: #c7254e;
+  background-color: rgba(255,255,255,0.7);
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+.panel-heading h3 {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+a.list-group-item:hover {
+  background-color: #f8f8f8;
+  border-left: 2px solid #555;
+  padding-left: 15px;
+}
+.indent {
+  display: block;
+  text-indent: 16px;
+}
+.list-group-item {
+  padding-left: 16px;
+}
+.list-group-item .toggle .open {
+  display: block;
+}
+.list-group-item .toggle .closed {
+  display: none;
+}
+.list-group-item.collapsed .toggle .open {
+  display: none;
+}
+.list-group-item.collapsed .toggle .closed {
+  display: block;
+}
+a.list-group-item {
+  font-size: 13px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+a.list-group-item.heading {
+  font-size: 15px;
+  background-color: #f5f5f5;
+}
+a.list-group-item.heading:hover {
+  background-color: #f8f8f8;
+}
+.list-group-item.collapse {
+  display: none;
+}
+.list-group-item.collapse.in {
+  display: block;
+}
+.list-group-item a span.closed {
+  display: none;
+}
+.list-group-item a span.open {
+  display: block;
+}
+.list-group-item a.collapsed span.closed {
+  display: block;
+}
+.list-group-item a.collapsed span.open {
+  display: none;
+}
+#nav {
+  width: inherit;
+  margin-top: 38px;
+  max-width: 255px;
+  top: 0;
+  bottom: 0;
+  padding-right: 12px;
+  padding-bottom: 12px;
+  overflow-y: auto;
+}
+@media (max-width: 1199px) {
+  #nav {
+    max-width: 212px;
+  }
+}
+</style></head><body><a href="#top" class="text-muted back-to-top"><i class="fa fa-toggle-up"></i>&nbsp;Back to top</a><div class="container"><div class="row"><div class="col-md-3"><nav id="nav" class="hidden-sm hidden-xs affix nav"><div class="list-group"><a data-toggle="" data-target="#users-menu" href="#users" class="list-group-item heading collapsed">Users</a><div id="users-menu"><a href="#users-signup" style="border-top-left-radius: 0; border-top-right-radius: 0" class="list-group-item"><span class="badge alert-success"><i class="fa fa-plus"></i></span>Signup</a></div></div></nav></div><div class="col-md-8"><div><header><div class="page-header"><h1 id="top">Tracking Muscle Activation Through Layers API</h1></div></header><div class="description"><p>This is the API of the TMATL project</p>
+<p>This is an all-JSON API. All requests and responses, except those transferring audio, image, or video content, must have a content-type header set to <code>application/json</code>.</p>
+<p>All endpoints except signup (<code>POST /users</code>) and login (<code>POST /sessions</code>) require an <code>Authorization</code> header in which you pass in the token that you previously received from a successful login request. For example:</p>
+<pre><code><span class="hljs-attribute">Authorization</span>: <span class="hljs-string">Token 1234567812345678</span>
+</code></pre><p>If the authorization header is missing, or the token is invalid or expired, an HTTP 401 response is returned. After receiving a 401, a client should try to login (<code>POST /sessions</code>) again to obtain a new token.</p>
+</div></div><div><div class="panel panel-default"><div class="panel-heading"><h3 id="users">Users&nbsp;<a href="#users"><i class="fa fa-link"></i></a></h3></div><div class="panel-body"><h4 id="users-signup">Signup&nbsp;<a href="#users-signup"><i class="fa fa-link"></i></a></h4><section id="users-signup-post" class="panel panel-success"><div class="panel-heading"><div style="float:right"><span style="text-transform: lowercase">Signup New Users</span></div><div style="float:left"><a href="#users-signup-post" class="btn btn-xs btn-success">POST</a></div><div style="overflow:hidden"><code>/users</code></div></div><div class="panel-body"><p>Create a new user with the posted data. The new account will be ready for use upon success.</p>
+</div><ul class="list-group"><li class="list-group-item"><strong>Request</strong><a data-toggle="collapse" data-target="#d4f15254deae53c4f807726c61edd482" class="pull-right collapsed"><span class="closed">Show</span><span class="open">Hide</span></a></li><li id="d4f15254deae53c4f807726c61edd482" class="list-group-item panel-collapse collapse"><h5>Body</h5><pre><code>{
+    "<span class="hljs-attribute">username</span>": <span class="hljs-value"><span class="hljs-string">"kobe24"</span></span>,
+    "<span class="hljs-attribute">email</span>": <span class="hljs-value"><span class="hljs-string">"kobe@bball.com"</span></span>,
+    "<span class="hljs-attribute">password</span>": <span class="hljs-value"><span class="hljs-string">"24blackmamba8"</span></span>,
+    "<span class="hljs-attribute">confirm_password</span>": <span class="hljs-value"><span class="hljs-string">"24blackmamba8"</span>
+</span>}
+</code></pre></li><li class="list-group-item"><strong>Response&nbsp;&nbsp;<code>201</code></strong><a data-toggle="collapse" data-target="#f8f1e72cbc3d0b73f5a203b76c5f1f3a" class="pull-right collapsed"><span class="closed">Show</span><span class="open">Hide</span></a></li><li id="f8f1e72cbc3d0b73f5a203b76c5f1f3a" class="list-group-item panel-collapse collapse"><h5>Body</h5><pre><code>{
+    "<span class="hljs-attribute">url</span>": <span class="hljs-value"><span class="hljs-string">"https://api.tmatl.com/users/kobe24"</span></span>,
+    "<span class="hljs-attribute">username</span>": <span class="hljs-value"><span class="hljs-string">"kobe24"</span></span>,
+    "<span class="hljs-attribute">email</span>": <span class="hljs-value"><span class="hljs-string">"kobe@bball.com"</span></span>,
+    "<span class="hljs-attribute">joined</span>": <span class="hljs-value"><span class="hljs-string">"2015-01-02T14:16:01Z"</span></span>,
+    "<span class="hljs-attribute">activities</span>": <span class="hljs-value">[]
+</span>}
+</code></pre></li><li class="list-group-item"><strong>Response&nbsp;&nbsp;<code>400</code></strong><a data-toggle="collapse" data-target="#9f0f8030c7010110f4c59b76212cd086" class="pull-right collapsed"><span class="closed">Show</span><span class="open">Hide</span></a></li><li id="9f0f8030c7010110f4c59b76212cd086" class="list-group-item panel-collapse collapse"><h5>Body</h5><pre><code>{
+    <span class="hljs-string">"reason"</span>: (<span class="hljs-string">"malformed json"</span>
+              <span class="hljs-string">|"</span>username is a required field for signup<span class="hljs-string">"</span>
+              <span class="hljs-string">|"</span>email is a required field for signup<span class="hljs-string">"</span>
+              <span class="hljs-string">|"</span>Passwords do no match<span class="hljs-string">"</span>
+              <span class="hljs-string">|"</span>Passwords must be at least <span class="hljs-number">16</span> characters long<span class="hljs-string">")</span>
+}
+</code></pre></li><li class="list-group-item"><strong>Response&nbsp;&nbsp;<code>409</code></strong><a data-toggle="collapse" data-target="#b240c1ed882d12f41b333c05a2e86f0f" class="pull-right collapsed"><span class="closed">Show</span><span class="open">Hide</span></a></li><li id="b240c1ed882d12f41b333c05a2e86f0f" class="list-group-item panel-collapse collapse"><h5>Body</h5><pre><code>{
+    "<span class="hljs-attribute">reason</span>": <span class="hljs-value"><span class="hljs-string">"username or email is already taken"</span>
+</span>}
+</code></pre></li></ul></section></div></div></div></div></div></div><p style="text-align: center;" class="text-muted">Generated by&nbsp;<a href="https://github.com/danielgtaylor/aglio" class="aglio">aglio</a>&nbsp;on 02 Jan 2015</p><div id="localFile" style="display: none; position: absolute; top: 0; left: 0; width: 100%; color: white; background: red; font-size: 150%; text-align: center; padding: 1em;">This page may not display correctly when opened as a local file. Instead, view it from a web server.
+
+</div></body><script src="//code.jquery.com/jquery-1.11.0.min.js"></script><script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script><script>(function() {
+  if (location.protocol === 'file:') {
+    document.getElementById('localFile').style.display = 'block';
+  }
+
+}).call(this);
+</script><script>(function() {
+  $('table').addClass('table');
+
+}).call(this);
+</script></html>
