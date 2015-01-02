@@ -4,6 +4,9 @@ import (
 	"time"
 )
 
+type Json map[string]interface{}
+type JsonArray []Json
+
 //
 // Signup
 //

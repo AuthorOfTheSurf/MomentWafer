@@ -1,10 +1,8 @@
 package service
 
 import (
-	"fmt"
-	"github.com/AuthorOfTheSurf/TMATL/server/service/query"
+	"github.com/AuthorOfTheSurf/TMATL/server/api/service/query"
 	"github.com/AuthorOfTheSurf/TMATL/server/types"
-	"time"
 )
 
 const (
@@ -47,7 +45,7 @@ func makeUserUrl(username string) string {
 
 func (s Svc) CreateNewUser(username, email, passwordHash string) (types.SignupResponse, bool) {
 	if joined, ok := s.Query.CreateUser(username, email, passwordHash); !ok {
-		return time.Time{}, ok
+		return types.SignupResponse{}, ok
 	} else {
 		return types.SignupResponse{
 			Url:        makeUserUrl(username),
@@ -58,3 +56,23 @@ func (s Svc) CreateNewUser(username, email, passwordHash string) (types.SignupRe
 		}, ok
 	}
 }
+
+//
+// Read
+//
+
+func (s Svc) UsernameIsUnique(username string) bool {
+	return !s.Query.UsernameExists(username)
+}
+
+func (s Svc) EmailIsUnique(email string) bool {
+	return !s.Query.EmailExists(email)
+}
+
+//
+// Update
+//
+
+//
+// Delete
+//

@@ -1,8 +1,6 @@
 package query
 
 import (
-	"encoding/json"
-	"github.com/AuthorOfTheSurf/TMATL/server/types"
 	"github.com/dchest/uniuri"
 	"github.com/jmcvetta/neoism"
 	"time"
@@ -51,6 +49,7 @@ func NewUUID() string {
 //
 // Create
 //
+
 func (q Query) CreateUser(username, email, passwordHash string) (time.Time, bool) {
 	created := []struct {
 		Joined time.Time `json:"joined"`
@@ -80,3 +79,51 @@ func (q Query) CreateUser(username, email, passwordHash string) (time.Time, bool
 		return now, ok
 	}
 }
+
+//
+// Read
+//
+
+func (q Query) UsernameExists(username string) bool {
+	found := []struct {
+		Username string `json:"username"`
+	}{}
+	q.cypherOrPanic(&neoism.CypherQuery{
+		Statement: `
+			MATCH   (u:User)
+			WHERE   u.username = {username}
+			RETURN  u.username AS username
+		`,
+		Parameters: neoism.Props{
+			"username": username,
+		},
+		Result: &found,
+	})
+	return len(found) > 0
+}
+
+func (q Query) EmailExists(email string) bool {
+	found := []struct {
+		Email string `json:"email"`
+	}{}
+	q.cypherOrPanic(&neoism.CypherQuery{
+		Statement: `
+			MATCH   (u:User)
+			WHERE   u.email = {email}
+			RETURN  u.email AS email
+		`,
+		Parameters: neoism.Props{
+			"email": email,
+		},
+		Result: &found,
+	})
+	return len(found) > 0
+}
+
+//
+// Update
+//
+
+//
+// Delete
+//

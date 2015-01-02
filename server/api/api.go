@@ -5,8 +5,8 @@ import (
 	"github.com/AuthorOfTheSurf/TMATL/server/api/util"
 	"github.com/AuthorOfTheSurf/TMATL/server/types"
 	"github.com/ChimeraCoder/go.crypto/bcrypt"
+	"github.com/ant0ine/go-json-rest/rest"
 	"github.com/mccoyst/validate"
-	"time"
 )
 
 type Api struct {
@@ -31,13 +31,13 @@ func NewApi(uri string) *Api {
 func (a Api) Signup(w rest.ResponseWriter, r *rest.Request) {
 	form := types.SignupForm{}
 
-	if err := r.DecodeJsonPayload(&proposal); err != nil {
-		rest.Error(w, 400, "malformed json")
+	if err := r.DecodeJsonPayload(&form); err != nil {
+		rest.Error(w, "malformed json", 500)
 		return
 	}
 
-	if err := a.Validator.ValidateAndTag(proposal, "json"); err != nil {
-		rest.Error(w, 400, err)
+	if err := a.Validator.ValidateAndTag(form, "json"); err != nil {
+		a.Util.SimpleValidationReason(w, 400, err)
 		return
 	}
 
@@ -65,7 +65,7 @@ func (a Api) Signup(w rest.ResponseWriter, r *rest.Request) {
 		rest.Error(w, err.Error(), 500)
 		return
 	} else {
-		if json, ok := !a.Svc.CreateNewUser(handle, email, string(hash)); !ok {
+		if json, ok := a.Svc.CreateNewUser(username, email, string(hash)); !ok {
 			a.Util.SimpleJsonReason(w, 500, "Unexpected failure to create new user")
 			return
 		} else {
