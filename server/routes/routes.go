@@ -12,7 +12,7 @@ func NewHandler(menu api.Api, disableLogs bool) (rest.ResourceHandler, error) {
 	}
 
 	err := handler.SetRoutes(
-		&rest.Route{"POST", "/signup", menu.Signup},
+		&rest.Route{"POST", "/users", menu.Signup},
 	)
 
 	return handler, err

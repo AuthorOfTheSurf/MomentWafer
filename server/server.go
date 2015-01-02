@@ -20,7 +20,7 @@ func main() {
 	handler, err := routes.NewHandler(*a, false)
 	panicIfErr(err)
 
-	http.Handle("/api/", http.StripPrefix("/api", &handler))
+	http.Handle("/", &handler)
 	fmt.Printf("The TMATL server is listening on port %s\n", port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
