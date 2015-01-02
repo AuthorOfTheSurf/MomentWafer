@@ -40,8 +40,8 @@ Create a new user with the posted data. The new account will be ready for use up
             "reason": ("malformed json"
                       |"username is a required field for signup"
                       |"email is a required field for signup"
-                      |"Passwords do no match"
-                      |"Passwords must be at least 16 characters long")
+                      |"passwords do no match"
+                      |"passwords must be at least 16 characters long")
         }
 
 + Response 409
