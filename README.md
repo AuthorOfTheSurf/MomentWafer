@@ -3,9 +3,9 @@
 =====
 
 A hardware system utilizing the BITalino to track muscle activation.
-Backed by a [Golang](https://golang.org/) 
 
-- Go API for performance and language
-- Neo4j graph database for related & chained-styled data
-- [Clean Web Client](https://www.google.com/) for data-viewing pleasure
+
+- Implemented as a family of Python scripts acting on raw data inputs
+- JSON as a data format
+- Clean GUI client for data-viewing pleasure
 - More info to come soon..
