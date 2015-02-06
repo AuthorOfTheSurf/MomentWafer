@@ -27,9 +27,11 @@ class BITalinoData:
     Constructor
     """
     def __init__(self, BITalinoTxtData):
-        split = BITalinoTxtData.split("\r\n")
-        self._dataStream = split[3:]
-        self._header = json.loads(split[1][2:])
+        # split = BITalinoTxtData.split("\r\n")
+        next(BITalinoTxtData)
+        self._header = json.loads(next(BITalinoTxtData)[2:])
+        next(BITalinoTxtData)
+        self._dataStream = BITalinoTxtData
         self._channels = self.makeChannels(self._dataStream)
     """
     BITalino header as a Python dict
@@ -77,16 +79,14 @@ class BITalinoData:
     def makeChannels(self, dataStream):
         channels = []
         labels = self._header["ColumnLabels"]
-        # Each line has a trailing tab, Datastream ends with a blank line
-        cleanStream = [line[:-1].split("\t") for line in dataStream[:-1]]
-        for col in range(len(labels)):
-            if col != 0:
-                # Convert to numpy.array then each column becomes the channel's data
-                # Also include label for the data
-                channels.append({
-                    "label": labels[col],
-                    "data": numpy.array(cleanStream)[:,col]
-                })
+        # Each line has a trailing tab, newline, and carrage return. Datastream ends with a blank line
+        fmtStream = [line[:-3].split("\t") for line in dataStream if len(line) > 0]
+        na = numpy.array(fmtStream).astype(int)
+        for col, label in enumerate(labels):
+            channels.append({
+                "data": na[:,col], # Each column of numpy.array becomes the channel's data
+                "label": label # Also include label for the data
+            }) if col != 0 else None
         return channels
     """
     Return a JSON representation of this BITalinoData object
@@ -98,7 +98,7 @@ class BITalinoData:
 def main():
     try:
         with open(sys.argv[1], "r") as bitsrc:
-            data = BITalinoData(bitsrc.read())
+            data = BITalinoData(bitsrc)
             print data.toJson()
     except IndexError as e:
         print "Missing BITalino data file argument"
