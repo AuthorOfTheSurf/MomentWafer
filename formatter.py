@@ -27,12 +27,10 @@ class BITalinoData:
     Constructor
     """
     def __init__(self, BITalinoTxtData):
-        # split = BITalinoTxtData.split("\r\n")
         next(BITalinoTxtData)
-        self._header = json.loads(next(BITalinoTxtData)[2:])
+        self._header = json.loads(next(BITalinoTxtData)[2:]) # Second line has header info
         next(BITalinoTxtData)
-        self._dataStream = BITalinoTxtData
-        self._channels = self.makeChannels(self._dataStream)
+        self._channels = self.makeChannels(BITalinoTxtData)
     """
     BITalino header as a Python dict
         {
@@ -48,19 +46,6 @@ class BITalinoData:
     @property
     def header(self):
         return self._header
-    """
-    Raw multi-column data stream, array of tsv
-    The "Digital*" channels are not recording data in this instance
-    SeqN resets every 16 samples
-
-        | SeqN | Digital0 | Digital1 | Digital2 | Digital3 | EMG |
-        15  1   1   1   1   270 
-        0   1   1   1   1   551 
-        1   1   1   1   1   432 
-    """
-    @property
-    def dataStream(self):
-        return self._dataStream
     """
     List of the channels and their data
         [
@@ -91,7 +76,7 @@ class BITalinoData:
     """
     Return a JSON representation of this BITalinoData object
     """
-    def toJson(self, pretty=True):
+    def toJson(self):
         jsonCh = [{"label": ch["label"], "data": ch["data"].tolist()} for ch in self._channels]
         return json.dumps({ "header": self._header, "channels": jsonCh })
 
