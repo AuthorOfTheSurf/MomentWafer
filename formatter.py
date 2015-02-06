@@ -26,7 +26,7 @@ class BITalinoData:
 	"""
 	Constructor
 	"""
-	def __init__(self, BITalinoTxtData=""):
+	def __init__(self, BITalinoTxtData):
 		split = BITalinoTxtData.split("\r\n")
 		self._dataStream = split[3:]
 		self._header = json.loads(split[1][2:])
@@ -84,23 +84,22 @@ class BITalinoData:
 				# Convert to numpy.array then each column becomes the channel's data
 				# Also include label for the data
 				channels.append({
-					'label': labels[col],
-					'data': numpy.array(cleanStream)[:,col]
+					"label": labels[col],
+					"data": numpy.array(cleanStream)[:,col]
 				})
 		return channels
 	"""
-	This is up next, returns this object as pure JSON
-	Main use will be piping this output into a `.json` file
+	Return a JSON representation of this BITalinoData object
 	"""
-	def toJson(self, pretty):
-		pass
+	def toJson(self, pretty=True):
+		jsonCh = [{"label": ch["label"], "data": ch["data"].tolist()} for ch in self._channels]
+		return json.dumps({ "header": self._header, "channels": jsonCh })
 
 def main():
 	try:
 		with open(sys.argv[1], "r") as bitsrc:
 			data = BITalinoData(bitsrc.read())
-			print data.header
-			print data.channels
+			print data.toJson()
 	except IndexError as e:
 		print "Missing BITalino data file argument"
 
