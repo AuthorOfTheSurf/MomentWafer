@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#! /usr/bin/env python
 """
 Used to format the raw data text files produced by a BITalino
 Parses the json-text format into a Python object more appropriate for
@@ -22,13 +22,16 @@ import sys
 import json
 import numpy
 
-class BITalinoData:
-    """
-    Constructor
-    """
+"""
+BITalino data object, a plain old Python object
+Accepts a BITalino .txt data file
+- Header json into dict
+- Parses colums into numpy arrays
+"""
+class BITdo:
     def __init__(self, BITalinoTxtData):
         next(BITalinoTxtData)
-        self._header = json.loads(next(BITalinoTxtData)[2:]) # Second line has header info
+        self._header = json.loads(next(BITalinoTxtData)[2:])
         next(BITalinoTxtData)
         self._channels = self.makeChannels(BITalinoTxtData)
     """
@@ -59,7 +62,7 @@ class BITalinoData:
         return self._channels
     """
     Parses the dataStream into and array of channel objects containing data and a label.
-    See the description for BITalinoData.channels
+    See the description for BITdo.channels
     """
     def makeChannels(self, dataStream):
         channels = []
@@ -74,16 +77,19 @@ class BITalinoData:
             }) if col != 0 else None
         return channels
     """
-    Return a JSON representation of this BITalinoData object
+    Return a JSON representation of this BITdo object
     """
     def toJson(self):
         jsonCh = [{"label": ch["label"], "data": ch["data"].tolist()} for ch in self._channels]
         return json.dumps({ "header": self._header, "channels": jsonCh })
 
+"""
+Return a json representation of the supplied BITalino data .txt file
+"""
 def main():
     try:
         with open(sys.argv[1], "r") as bitsrc:
-            data = BITalinoData(bitsrc)
+            data = BITdo(bitsrc)
             print data.toJson()
     except IndexError as e:
         print "Missing BITalino data file argument"
