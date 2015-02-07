@@ -10,10 +10,12 @@ import os
 class test_pipeline(unittest.TestCase):
 
     def setUp(self):
-    	try:
-    		self.src = open("../test/data/bit-test-data.txt")
-    	except:
-    		print "Error during unittest setup"
+        try:
+            __location__ = os.path.realpath(
+                os.path.join(os.getcwd(), os.path.dirname(__file__)))
+            self.src = open(os.path.join(__location__, "bit-test-data.txt"))
+        except:
+            print "Error during unittest setup"
 
     def test_open(self):
         self.assertEquals(len(self.src.read().split("\n")), 20)
@@ -26,4 +28,4 @@ class test_pipeline(unittest.TestCase):
         self.assertEquals(len(bitdo.channels[4]["data"]), 16)
 
 if __name__ == '__main__':
-	unittest.main()
+    unittest.main()
