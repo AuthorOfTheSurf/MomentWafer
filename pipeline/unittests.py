@@ -1,18 +1,29 @@
 #! /usr/bin/env python
+"""
+Unit tests
+"""
 
 import unittest
 import parser
+import os
 
-class test_parser:
+class test_pipeline(unittest.TestCase):
+
     def setUp(self):
-        self.bitdo = 
+    	try:
+    		self.src = open("../test/data/bit-test-data.txt")
+    	except:
+    		print "Error during unittest setup"
 
+    def test_open(self):
+        self.assertEquals(len(self.src.read().split("\n")), 20)
 
-    def test_sample(self):
-        with self.assertRaises(ValueError):
-            random.sample(self.seq, 20)
-        for element in random.sample(self.seq, 5):
-            self.assertTrue(element in self.seq)
+    def test_parser(self):
+        bitdo = parser.BITdo(self.src)
+        self.assertEquals(len(bitdo.toJson()), 717)
+        self.assertTrue(len(bitdo.channels), 5)
+        self.assertEquals(bitdo.header["SamplingFrequency"], "1000")
+        self.assertEquals(len(bitdo.channels[4]["data"]), 16)
 
 if __name__ == '__main__':
 	unittest.main()
