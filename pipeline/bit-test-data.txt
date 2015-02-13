@@ -1,5 +1,5 @@
 # JSON Text File Format
-# {"SamplingResolution": "10", "SampledChannels": [1], "SamplingFrequency": "1000", "ColumnLabels": ["SeqN", "Digital0", "Digital1", "Digital2", "Digital3", "EMG"], "AcquiringDevice": "98:D3:31:XX:XX:XX", "Version": "111", "StartDateTime": "2015-2-2 10:30:2"}
+# {"SamplingResolution": "10", "SampledChannels": [1], "SamplingFrequency": "1000", "ColumnLabels": ["SeqN", "Digital0", "Digital1", "Digital2", "Digital3", "EMG"], "AcquiringDevice": "98:D3:31:XX:XX:XX", "Version": "111", "StartDateTime": "2015-02-12 19:37:46.727000"}
 # EndOfHeader
 0	1	1	1	1	467	
 1	1	1	1	1	467	

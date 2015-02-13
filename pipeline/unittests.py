@@ -8,6 +8,8 @@ import parser
 import os
 
 class test_pipeline(unittest.TestCase):
+    LEN_FULL_DATETIME = 26
+    LEN_TEST_FILE = 727
 
     def setUp(self):
         try:
@@ -22,10 +24,12 @@ class test_pipeline(unittest.TestCase):
 
     def test_parser(self):
         bitdo = parser.BITdo(self.src)
-        self.assertEquals(len(bitdo.toJson()), 717)
+        self.assertEquals(len(bitdo.toJson()), test_pipeline.LEN_TEST_FILE)
         self.assertTrue(len(bitdo.channels), 5)
         self.assertEquals(bitdo.header["SamplingFrequency"], "1000")
         self.assertEquals(len(bitdo.channels[4]["data"]), 16)
+        # Assure that datetime is to microsecond precision
+        self.assertEquals(len(bitdo.header["StartDateTime"]), test_pipeline.LEN_FULL_DATETIME)
 
 if __name__ == '__main__':
     unittest.main()
