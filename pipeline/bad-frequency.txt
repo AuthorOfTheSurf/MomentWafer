@@ -1,0 +1,19 @@
+# JSON Text File Format
+# {"SamplingResolution": "10", "SampledChannels": [1], "SamplingFrequency": "100", "ColumnLabels": ["SeqN", "Digital0", "Digital1", "Digital2", "Digital3", "EMG"], "AcquiringDevice": "98:D3:31:XX:XX:XX", "Version": "111", "StartDateTime": "2015-02-12 19:37:46.727000"}
+# EndOfHeader
+0	1	1	1	1	467	
+1	1	1	1	1	467	
+2	1	1	1	1	472	
+3	1	1	1	1	476	
+4	1	1	1	1	478	
+5	1	1	1	1	467	
+6	1	1	1	1	472	
+7	1	1	1	1	472	
+8	1	1	1	1	472	
+9	1	1	1	1	472	
+10	1	1	1	1	462	
+11	1	1	1	1	505	
+12	1	1	1	1	1020	
+13	1	1	1	1	1020	
+14	1	1	1	1	415	
+15	1	1	1	1	270	

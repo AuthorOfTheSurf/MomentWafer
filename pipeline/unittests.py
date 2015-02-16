@@ -16,6 +16,8 @@ class test_pipeline(unittest.TestCase):
             __location__ = os.path.realpath(
                 os.path.join(os.getcwd(), os.path.dirname(__file__)))
             self.src = open(os.path.join(__location__, "bit-test-data.txt"))
+            self.badFreq = open(os.path.join(__location__, "bad-frequency.txt"))
+            self.badStartTime = open(os.path.join(__location__, "bad-starttime.txt"))
         except:
             print "Error during unittest setup"
 
@@ -30,6 +32,10 @@ class test_pipeline(unittest.TestCase):
         self.assertEquals(len(bitdo.channels[4]["data"]), 16)
         # Assure that datetime is to microsecond precision
         self.assertEquals(len(bitdo.header["StartDateTime"]), test_pipeline.LEN_FULL_DATETIME)
+
+    def test_parser_errors(self):
+        self.assertRaises(AttributeError, parser.BITdo, (self.badFreq))
+        self.assertRaises(AttributeError, parser.BITdo, (self.badStartTime))
 
 if __name__ == '__main__':
     unittest.main()

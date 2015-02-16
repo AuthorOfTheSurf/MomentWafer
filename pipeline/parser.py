@@ -7,7 +7,7 @@ processing by the the MATL application
 Sample BITalino txt file:
 
     # JSON Text File Format
-    # {"SamplingResolution": "10", "SampledChannels": [1], "SamplingFrequency": "1000", "ColumnLabels": ["SeqN", "Digital0", "Digital1", "Digital2", "Digital3", "EMG"], "AcquiringDevice": "98:D3:31:XX:XX:XX", "Version": "111", "StartDateTime": "2015-2-2 10:30:2"}
+    # {"SamplingResolution": "10", "SampledChannels": [1], "SamplingFrequency": "1000", "ColumnLabels": ["SeqN", "Digital0", "Digital1", "Digital2", "Digital3", "EMG"], "AcquiringDevice": "98:D3:31:XX:XX:XX", "Version": "111", "StartDateTime": "2015-02-12 19:37:46.727000"}
     # EndOfHeader
     0   1   1   1   1   467 
     1   1   1   1   1   467 
@@ -15,6 +15,11 @@ Sample BITalino txt file:
     3   1   1   1   1   476 
     4   1   1   1   1   478 
     ...
+
+    Note that the StartDateTime field above is formatted in a non-default way.
+    parser.py expects a StartDateTime field to be formatted as ISO with a space between
+    the date and the time. This is done by changing line 241 of `code/writefile.py` to
+    dict['StartDateTime'] = date.isoformat(" ")
 
 """
 
@@ -31,7 +36,7 @@ Accepts a BITalino .txt data file
 class BITdo:
     def __init__(self, BITalinoTxtData):
         next(BITalinoTxtData)
-        self._header = json.loads(next(BITalinoTxtData)[2:])
+        self._header = self.makeHeader(next(BITalinoTxtData))
         next(BITalinoTxtData)
         self._channels = self.makeChannels(BITalinoTxtData)
     """
@@ -43,7 +48,7 @@ class BITdo:
             "ColumnLabels": ["SeqN", "Digital0", "Digital1", "Digital2", "Digital3", "EMG"],
             "AcquiringDevice": "98:D3:31:XX:XX:XX",
             "Version": "111",
-            "StartDateTime": "2015-2-2 10:30:2"
+            "StartDateTime": "2015-02-12 19:37:46.727000"
         }
     """
     @property
@@ -60,6 +65,16 @@ class BITdo:
     @property
     def channels(self):
         return self._channels
+    """
+    Parses the header, located on line two of the source file into a python dict
+    """
+    def makeHeader(self, headerLine):
+        header = json.loads(headerLine[2:])
+        if len(header["StartDateTime"]) != 26:
+            raise AttributeError("BITalino source file does not have microsecond precision in \"StartDateTime\" field")
+        elif header["SamplingFrequency"] != "1000":
+            raise AttributeError("BITalino source data must be recorded at 1000hz, found %s" %header["SamplingFrequency"])
+        return header
     """
     Parses the dataStream into and array of channel objects containing data and a label.
     See the description for BITdo.channels
