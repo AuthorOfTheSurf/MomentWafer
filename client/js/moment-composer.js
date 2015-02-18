@@ -28,6 +28,10 @@ function MomentComposerViewModel() {
         self.forceEval()
         return $pop.paused() ? "Play" : "Pause"
     })
+    self.playButtonClass = ko.computed(function() {
+        self.forceEval()
+        return $pop.paused() ? "button-primary" : ""
+    })
 
     self.togglePlay = function() {
         if ($pop.paused()) {

@@ -25,7 +25,8 @@
   </div>
   <div class="row">
     <div class="column">
-      <a class="button" data-bind="click: $root.togglePlay"><span data-bind="text: playButtonLabel"></span></a>
+      <a class="button" data-bind="click: $root.togglePlay,
+      	  css: playButtonClass"><span data-bind="text: playButtonLabel"></span></a>
       <a class="button u-pull-right" data-bind="click: $root.printTime">Time</a>
     </div>
   </div>
