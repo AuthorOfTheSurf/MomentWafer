@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html><head>
+
+<title>MomentWafer Client</title>
+
+<meta charset="utf-8"/>
+<meta name="description" content="MomentComposer"/>
+<meta name="author" content="AuthorOfTheSurf"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" href="../css/normalize.css"/>
+<link rel="stylesheet" href="../css/skeleton.css"/>
+<link rel="stylesheet" href="../css/moment-composer.css">
+
+</head><body>
+
+<h1>MomentComposer</h1>
+<input type="file" accept="video/*"/>
+<div class="container">
+  <div class="row">
+    <div class="eight column">
+      <video height="540" width="960" id="video" controls></video>
+    </div>
+  </div>
+  <div class="row">
+    <div class="column">
+      <a class="button" data-bind="click: $root.togglePlay"><span data-bind="text: playButtonLabel"></span></a>
+      <a class="button u-pull-right" data-bind="click: $root.printTime">Time</a>
+    </div>
+  </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script type="text/javascript" src="../js/popcorn.js"></script>
+<script type="text/javascript" src="../js/knockout-3.2.0.js"></script>
+<script type="text/javascript" src="../js/moment-composer.js"></script>
+
+</body></html>
