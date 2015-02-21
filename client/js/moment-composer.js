@@ -46,15 +46,19 @@ function MomentComposerViewModel() {
   self.selectedFrameRate.subscribe(function(newValue) {
     console.log(newValue, self.frameStep());
   });
-  self.previousFrame = function() {
-    $pop.pause();
-    $pop.currentTime($pop.currentTime() - self.frameStep());
-    self.refresh();
+  self.previousFrame = function(n) {
+    self.skipFrames(n, -self.frameStep());
   }
-   self.nextFrame = function() {
+  self.nextFrame = function(n) {
+    self.skipFrames(n, self.frameStep());
+  }
+  self.skipFrames = function(n, delta) {
     $pop.pause();
-    $pop.currentTime($pop.currentTime() + self.frameStep());
     self.refresh();
+    var skips = isNaN(n) ? 1 : n;
+    for (var i = skips; i > 0; i--) {
+      $pop.currentTime($pop.currentTime() + delta);
+    }
   }
 
   // Utils
