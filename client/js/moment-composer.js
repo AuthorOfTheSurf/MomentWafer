@@ -39,7 +39,7 @@ function MomentComposerViewModel() {
   //
   var FRAME_RATES = [24, 30, 60, 120]
   self.frameByFrameRates = ko.observableArray(FRAME_RATES);
-  self.selectedFrameRate = ko.observable();
+  self.selectedFrameRate = ko.observable(FRAME_RATES[1]);
   self.frameStep = ko.computed(function() {
     return 1.0 / self.selectedFrameRate();
   });

@@ -24,15 +24,15 @@
     </div>
   </div>
   <div class="row">
-    <div class="column">
+    <div class="eight column">
       <a class="button" data-bind="click: $root.togglePlay,
-          css: playButtonClass"><span data-bind="text: playButtonLabel"></span></a>
-      <a class="button" data-bind="click: $root.previousFrame.bind(this, 3)">Prev FFF</a>
-      <a class="button" data-bind="click: $root.previousFrame">Prev F</a>
-      <a class="button" data-bind="click: $root.nextFrame">Next F</a>
-      <a class="button" data-bind="click: $root.nextFrame.bind(this, 3)">Next FFF</a>
+                                   css: playButtonClass"><span data-bind="text: playButtonLabel"></span></a>
+      <a class="button prevent-select" data-bind="click: $root.previousFrame.bind(this, 3)">Prev FFF</a>
+      <a class="button prevent-select" data-bind="click: $root.previousFrame">Prev F</a>
+      <a class="button prevent-select" data-bind="click: $root.nextFrame">Next F</a>
+      <a class="button prevent-select" data-bind="click: $root.nextFrame.bind(this, 3)">Next FFF</a>
       <select class="button u-pull-right" data-bind="options: frameByFrameRates,
-                         value: selectedFrameRate"></select>
+                                                     value: selectedFrameRate"></select>
       <a class="button u-pull-right" data-bind="click: $root.printTime">Time</a>
     </div>
   </div>
