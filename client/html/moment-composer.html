@@ -26,7 +26,11 @@
   <div class="row">
     <div class="column">
       <a class="button" data-bind="click: $root.togglePlay,
-      	  css: playButtonClass"><span data-bind="text: playButtonLabel"></span></a>
+          css: playButtonClass"><span data-bind="text: playButtonLabel"></span></a>
+      <a class="button" data-bind="click: $root.previousFrame">Prev F</a>
+      <a class="button" data-bind="click: $root.nextFrame">Next F</a>
+      <select class="button u-pull-right" data-bind="options: frameByFrameRates,
+                         value: selectedFrameRate"></select>
       <a class="button u-pull-right" data-bind="click: $root.printTime">Time</a>
     </div>
   </div>
