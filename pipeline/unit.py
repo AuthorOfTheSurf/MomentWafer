@@ -17,9 +17,9 @@ class test_pipeline(unittest.TestCase):
         try:
             __location__ = os.path.realpath(
                 os.path.join(os.getcwd(), os.path.dirname(__file__)))
-            self.src = open(os.path.join(__location__, "bit-test-data.txt"))
-            self.badFreq = open(os.path.join(__location__, "bad-frequency.txt"))
-            self.badStartTime = open(os.path.join(__location__, "bad-starttime.txt"))
+            self.src = open(os.path.join(__location__, "data/bit-test-data.txt"))
+            self.badFreq = open(os.path.join(__location__, "data/bad-frequency.txt"))
+            self.badStartTime = open(os.path.join(__location__, "data/bad-starttime.txt"))
         except:
             print "Error during unittest setup"
 
@@ -73,6 +73,13 @@ class test_pipeline(unittest.TestCase):
         self.assertEquals(s["826"].getStreakExp(3), [27])
         self.assertEquals(s["~~"].getStreaks(), [2, 1])
         self.assertEquals(s["~~"].getStreakExp(-1), [0.5, 1])
+
+    def test_aggregator_average(self):
+        bitdo = parser.BITdo(self.src)
+        self.assertEquals(aggregator.average(bitdo.channels[4]['data']), 525.4375)
+        self.assertEquals(aggregator.average([1,2,3]), 2)
+        self.assertEquals(aggregator.average([x for x in range(1000)]), 499.5)
+
 
 if __name__ == '__main__':
     unittest.main()

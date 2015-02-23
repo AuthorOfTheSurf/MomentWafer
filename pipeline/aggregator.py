@@ -3,6 +3,8 @@
 Aggregate Data Parsing Library
 """
 
+import numpy
+
 """
 Streakiness of some element
 Be sure to end a Streak with a call to #broken()
@@ -48,6 +50,9 @@ def streaksIn(a):
 			look = v
 	streaks[look].broken()
 	return streaks
+
+def average(a):
+	return numpy.average(a)
 
 def main():
 	b = [True, False, False, True, False]
