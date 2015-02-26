@@ -66,8 +66,33 @@ function MomentComposerViewModel() {
   self.printTime = function() {
     console.log($pop.currentTime());
   }
-}
 
+  // Database
+  //
+  $.couch.urlPrefix = "http://localhost:5984";
+  var db = $.couch.db("mw-test");
+  var doc = {text: "sup homie!"};
+  self.saved = ko.observable();
+  self.saved.subscribe(function (newValue) {
+    db.openDoc(newValue.id, {
+      success: function(data) {
+          console.log("New message saved: '" + data.text + "'");
+      },
+      error: function(status) {
+          console.log(status);
+      }
+    });
+  });
+
+  db.saveDoc(doc, {
+      success: function(data) {
+          self.saved(data);
+      },
+      error: function(status) {
+          console.log("error");
+      }
+  });
+}
 
 // Apply view model to view
 ko.applyBindings(new MomentComposerViewModel());
