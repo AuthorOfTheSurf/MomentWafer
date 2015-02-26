@@ -11,7 +11,7 @@ import aggregator
 
 class test_pipeline(unittest.TestCase):
     LEN_FULL_DATETIME = 26
-    LEN_TEST_FILE = 727
+    LEN_TEST_FILE = 632
 
     def setUp(self):
         try:
@@ -36,9 +36,9 @@ class test_pipeline(unittest.TestCase):
     def test_parser(self):
         bitdo = parser.BITdo(self.src)
         self.assertEquals(len(bitdo.toJson()), test_pipeline.LEN_TEST_FILE)
-        self.assertTrue(len(bitdo.channels), 5)
+        self.assertEquals(len(bitdo.channels.keys()), 5)
         self.assertEquals(bitdo.header["SamplingFrequency"], "1000")
-        self.assertEquals(len(bitdo.channels[4]["data"]), 16)
+        self.assertEquals(len(bitdo.channels["EMG"]), 16)
         # Assure that datetime is to microsecond precision
         self.assertEquals(len(bitdo.header["StartDateTime"]), test_pipeline.LEN_FULL_DATETIME)
 
@@ -76,7 +76,7 @@ class test_pipeline(unittest.TestCase):
 
     def test_aggregator_average(self):
         bitdo = parser.BITdo(self.src)
-        self.assertEquals(aggregator.average(bitdo.channels[4]['data']), 525.4375)
+        self.assertEquals(aggregator.average(bitdo.channels['EMG']), 525.4375)
         self.assertEquals(aggregator.average([1,2,3]), 2)
         self.assertEquals(aggregator.average([x for x in range(1000)]), 499.5)
 

@@ -80,23 +80,24 @@ class BITdo:
     See the description for BITdo.channels
     """
     def makeChannels(self, dataStream):
-        channels = []
         labels = self._header["ColumnLabels"]
         # Each line has a trailing tab, newline, and carrage return. Datastream ends with a blank line
         fmtStream = [line[:-3].split("\t") for line in dataStream if len(line) > 0]
         na = numpy.array(fmtStream).astype(int)
+
+        channels = {}
         for col, label in enumerate(labels):
-            channels.append({
-                "data": na[:,col], # Each column of numpy.array becomes the channel's data
-                "label": label # Also include label for the data
-            }) if col != 0 else None
+            if label != "SeqN":
+                channels[label] = na[:,col] # grab column col from 2d array na
         return channels
     """
     Return a JSON representation of this BITdo object
     """
     def toJson(self):
-        jsonCh = [{"label": ch["label"], "data": ch["data"].tolist()} for ch in self._channels]
-        return json.dumps({ "header": self._header, "channels": jsonCh })
+        channels = {}
+        for key, value in self._channels.iteritems():
+            channels[key] = value.tolist()
+        return json.dumps({ "header": self._header, "channels": channels })
 
 """
 Return a json representation of the supplied BITalino data .txt file
