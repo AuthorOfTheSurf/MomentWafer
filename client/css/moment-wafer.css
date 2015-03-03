@@ -2,10 +2,6 @@ video, input {
     display: block;
 }
 
-input {
-    width: 100%;       
-}
-
 .info {
     background-color: aqua;            
 }
@@ -22,4 +18,8 @@ input {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+
+.u-quarter-width {
+  width: 25%;
 }

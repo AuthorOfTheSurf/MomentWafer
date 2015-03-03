@@ -11,7 +11,7 @@
 <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css"/>
 <link rel="stylesheet" href="../css/normalize.css"/>
 <link rel="stylesheet" href="../css/skeleton.css"/>
-<link rel="stylesheet" href="../css/moment-composer.css">
+<link rel="stylesheet" href="../css/moment-wafer.css">
 
 </head><body>
 
@@ -24,16 +24,25 @@
     </div>
   </div>
   <div class="row">
-    <div class="eight column">
-      <a class="button" data-bind="click: $root.togglePlay,
+    <div class="one-half column">
+      <a class="button u-full-width" data-bind="click: $root.togglePlay,
                                    css: playButtonClass"><span data-bind="text: playButtonLabel"></span></a>
-      <a class="button prevent-select" data-bind="click: $root.previousFrame.bind(this, 3)">Prev FFF</a>
+      <a class="button prevent-select" data-bind="click: $root.previousFrame.bind(this, 3)">P FFF</a>
       <a class="button prevent-select" data-bind="click: $root.previousFrame">Prev F</a>
       <a class="button prevent-select" data-bind="click: $root.nextFrame">Next F</a>
-      <a class="button prevent-select" data-bind="click: $root.nextFrame.bind(this, 3)">Next FFF</a>
-      <select class="button u-pull-right" data-bind="options: frameByFrameRates,
-                                                     value: selectedFrameRate"></select>
-      <a class="button u-pull-right" data-bind="click: $root.printTime">Time</a>
+      <a class="button prevent-select" data-bind="click: $root.nextFrame.bind(this, 3)">N FFF</a>
+      <select class="button" data-bind="options: frameByFrameRates, value: selectedFrameRate"></select>
+      <a class="button" data-bind="click: $root.printTime">Time</a>
+    </div>
+    <div class="one-half column">
+      <label for="run-id">Run Id</label>
+      <input class="u-full-width" type="text" placeholder="freethrows-01" id="run-id">
+      <label for="athelete-id">Athlete Id</label>
+      <!-- need athelete ids here -->
+      <select class="u-full-width" id="athelete-id">
+        <option value="Option 1">yo</option>
+        <option value="Option 2">knockout this stuff</option>
+        <option value="Option 3">sup</option> </select>
     </div>
   </div>
 </div>
