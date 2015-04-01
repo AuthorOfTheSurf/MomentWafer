@@ -12,21 +12,21 @@ before looking at the streak data
 """
 class Streak:
 	def __init__(self):
-		self._n = 0
+		self._occurrences = 0
 		self._current = 0
-		self._firstPass = []
+		self._streaks = []
 	def hit(self):
-		self._n += 1
+		self._occurrences += 1
 		self._current += 1
 	def broken(self):
-		self._firstPass.append(self._current)
+		self._streaks.append(self._current)
 		self._current = 0
 	def getStreaks(self):
-		return self._firstPass
+		return self._streaks
 	def getStreakExp(self, exp):
-		return [n ** exp for n in self._firstPass]
+		return [n ** exp for n in self._streaks]
 	def toString(self):
-		return "n: %s, current: %s, streaks: %s" %(self._n, self._current, self._firstPass)
+		return "n: %s, current: %s, streaks: %s" %(self._occurrences, self._current, self._streaks)
 
 """
 Returns a dictionary of Streak objects for each element
