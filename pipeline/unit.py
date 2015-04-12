@@ -101,11 +101,16 @@ class test_pipeline(unittest.TestCase):
             user, "Free Throws", "no description")
         self.service.add_moment(activity)
         self.service.add_moment(activity)
-        self.assertEquals(sum(1 for _ in self.graph.find("User")), 1)
-        self.assertEquals(sum(1 for _ in self.graph.find("Activity")), 1)
-        self.assertEquals(sum(1 for _ in self.graph.find("Moment")), 2)
-        self.assertEquals(sum(1 for _ in self.graph.find("Annotation")), 2)
+        self.assertEquals(count(self.graph.find("User")), 1)
+        self.assertEquals(count(self.graph.find("Activity")), 1)
+        self.assertEquals(count(self.graph.find("Moment")), 2)
+        self.assertEquals(count(self.graph.find("Annotation")), 2)
 
+def count(iter):
+    try:
+        return len(iter)
+    except TypeError:
+        return sum(1 for _ in iter)
 
 if __name__ == '__main__':
     unittest.main()
