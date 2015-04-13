@@ -10,6 +10,7 @@ import aggregator
 from service import WaferService
 from py2neo import Graph
 from py2neo import Node, Relationship
+import requests
 
 
 class test_pipeline(unittest.TestCase):
@@ -105,6 +106,16 @@ class test_pipeline(unittest.TestCase):
         self.assertEquals(count(self.graph.find("Activity")), 1)
         self.assertEquals(count(self.graph.find("Moment")), 2)
         self.assertEquals(count(self.graph.find("Annotation")), 2)
+
+    #
+    # Graph API
+    #
+    def test_post_user(self):
+        r = requests.post('http://localhost:8000/users', {
+            'userid': 'AwesomeName'})
+        self.assertEquals(r.status_code, 200)
+        r = requests.post('http://localhost:8000/users', {})
+        self.assertEquals(r.status_code, 400)
 
 def count(iter):
     try:
