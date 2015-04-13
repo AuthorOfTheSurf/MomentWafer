@@ -12,26 +12,43 @@ class UserResource:
     def on_post(self, req, resp):
         if "userid" in req.params:
             self.graph.add_user(req.params["userid"])
-            resp.status = falcon.HTTP_200
+            resp.status = falcon.HTTP_201
         else:
             resp.status = falcon.HTTP_400
 
 
-def start(env, startResp):
+class ActivityResource:
+
+    def __init__(self, graph):
+        self.graph = WaferService(graph)
+
+    def on_post(self, req, resp):
+        userid = req.params.get("userid", None)
+        name = req.params.get("name", None)
+        description = req.params.get("description", "")
+
+        if userid != None and name != None:
+            self.graph.add_activity(userid, name, description)
+            resp.status = falcon.HTTP_201
+        else:
+            resp.status = falcon.HTTP_400
+
+
+def build_app(graph):
     app = falcon.API()
-    graph = Graph()
-    users = UserResource(graph)
+    graph = graph
 
-    app.add_route('/users', users)
+    app.add_route('/users', UserResource(graph))
+    app.add_route('/activities', ActivityResource(graph))
 
+    return app
+
+
+def start(env, startResp):
+    app = build_app(app, Graph())
     return app(env, startResp)
 
 
 def test_mode(env, startResp):
-    app = falcon.API()
-    graph = Graph("http://localhost:8484/db/data")
-    users = UserResource(graph)
-    
-    app.add_route('/users', users)
-
+    app = build_app(Graph("http://localhost:8484/db/data"))
     return app(env, startResp)

@@ -21,27 +21,29 @@ class WaferService:
     def add_user(self, userid):
         return self.graph.merge_one("User", "userid", userid)
 
-    def add_activity(self, user, name, description):
-        activity = self.get_activity(user, name)
+    def add_activity(self, userid, name, description):
+        activity = self.get_activity(userid, name)
         if activity == None:
             activity = Node("Activity", name=name, description=description)
-            r = Relationship(user, "DOES", activity)
+            r = Relationship(self.add_user(userid), "DOES", activity)
             self.graph.create(r)
         return activity
 
-    def get_activity(self, user, name):
+    def get_activity(self, userid, name):
         query = activity_of_user
         params = {
-            'userid': user.properties[u'userid'],
+            'userid': userid,
             'activity_name': name
         }
         return self.graph.cypher.execute_one(query, params)
 
-    def add_moment(self, activity, timestamp=None, jsonAnnotations={}):
+    def add_moment(self, userid, name, timestamp=None, jsonAnnotations={}):
         moment = Node("Moment", timestamp=timestamp)
-        r = Relationship(moment, "MOMENT_IN", activity)
-        self.graph.create(r)
-        self.add_annotations(moment, jsonAnnotations)
+        activity = self.get_activity(userid, name)
+        if activity != None:
+            r = Relationship(moment, "MOMENT_IN", activity)
+            self.graph.create(r)
+            self.add_annotations(moment, jsonAnnotations)
         return moment
 
     def add_annotations(self, moment, jsonAnnotations):
@@ -53,23 +55,3 @@ class WaferService:
 
 def now():
     return datetime.datetime.now().isoformat()
-
-
-if __name__ == "__main__":
-    svc = WaferService(Graph())
-    user = svc.add_user("Boat")
-    activity = svc.add_activity(
-        user, "Free-Throw shooting",
-        "Standard free-throws after a short warm-up.")
-    annotations = {
-        "goal": True,
-        "swish": True,
-        "felt-good": True
-    }
-    i1 = svc.add_instance(activity, now(), annotations)
-    annotations = {
-        "goal": False,
-        "swish": False,
-        "comm": "Went off off-hand"
-    }
-    i2 = svc.add_instance(activity, now(), annotations)

@@ -94,14 +94,16 @@ class test_pipeline(unittest.TestCase):
         self.assertEquals(aggregator.average([x for x in range(1000)]), 499.5)
 
     #
-    # Annotator
+    # Graph Service
     #
     def test_add_new_user(self):
         user = self.service.add_user("Duke")
+        userid = user.properties["userid"]
         activity = self.service.add_activity(
-            user, "Free Throws", "no description")
-        self.service.add_moment(activity)
-        self.service.add_moment(activity)
+            userid, "Free Throws", "no description")
+        activityname = activity.properties["name"]
+        self.service.add_moment(userid, activityname)
+        self.service.add_moment(userid, activityname)
         self.assertEquals(count(self.graph.find("User")), 1)
         self.assertEquals(count(self.graph.find("Activity")), 1)
         self.assertEquals(count(self.graph.find("Moment")), 2)
@@ -113,9 +115,21 @@ class test_pipeline(unittest.TestCase):
     def test_post_user(self):
         r = requests.post('http://localhost:8000/users', {
             'userid': 'AwesomeName'})
-        self.assertEquals(r.status_code, 200)
+        self.assertEquals(r.status_code, 201)
+
+    def test_failed_post_user(self):
         r = requests.post('http://localhost:8000/users', {})
         self.assertEquals(r.status_code, 400)
+
+    def test_post_activity(self):
+        r = requests.post('http://localhost:8000/users', {
+            'userid': 'AwesomeName'})
+        self.assertEquals(r.status_code, 201)
+        r = requests.post('http://localhost:8000/activities', {
+            'userid': 'AwesomeName',
+            'name': 'chill'})
+        self.assertEquals(r.status_code, 201)
+
 
 def count(iter):
     try:
