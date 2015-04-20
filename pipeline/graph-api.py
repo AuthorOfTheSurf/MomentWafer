@@ -33,6 +33,23 @@ class ActivityResource:
         else:
             resp.status = falcon.HTTP_400
 
+class MomentResource:
+
+    def __init__(self, graph):
+        self.graph = WaferService(graph)
+
+    def on_post(self, req, resp):
+        userid = req.params.get("userid", None)
+        name = req.params.get("name", None)
+        timestamp = req.params.get("timestamp", None)
+        annotations = req.params.get("annotations", "{}")
+
+        if any(p is None for p in [userid, name, timestamp, annotations]):
+            self.graph.add_moment(userid, name, timestamp, annotations)
+            resp.status = falcon.HTTP_201
+        else:
+            resp.status = falcon.HTTP_400
+
 
 def build_app(graph):
     app = falcon.API()
@@ -40,6 +57,7 @@ def build_app(graph):
 
     app.add_route('/users', UserResource(graph))
     app.add_route('/activities', ActivityResource(graph))
+    app.add_route('/moments', MomentResource(graph))
 
     return app
 

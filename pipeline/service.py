@@ -37,17 +37,24 @@ class WaferService:
         }
         return self.graph.cypher.execute_one(query, params)
 
-    def add_moment(self, userid, name, timestamp=None, jsonAnnotations={}):
+    """
+    Annotations look like: ["make:true", "swish:true"]
+    """
+    def add_moment(self, userid, name, timestamp=None, annotations=[]):
         moment = Node("Moment", timestamp=timestamp)
         activity = self.get_activity(userid, name)
         if activity != None:
             r = Relationship(moment, "MOMENT_IN", activity)
             self.graph.create(r)
-            self.add_annotations(moment, jsonAnnotations)
+            self.add_annotations(moment, annotations)
         return moment
 
-    def add_annotations(self, moment, jsonAnnotations):
-        annotation = Node("Annotation", **jsonAnnotations)
+    def add_annotations(self, moment, annotations):
+        d = {}
+        for e in annotations:
+            e = e.split(":")
+            d[e[0]] = e[1]
+        annotation = Node("Annotation", **d)
         r = Relationship(annotation, "ANNOTATION_OF", moment)
         self.graph.create_unique(r)
         return annotation, moment
@@ -55,3 +62,4 @@ class WaferService:
 
 def now():
     return datetime.datetime.now().isoformat()
+
