@@ -56,6 +56,7 @@ class test_pipeline(unittest.TestCase):
         self.assertEquals(
             len(bitdo.header["StartDateTime"]), test_pipeline.LEN_DATETIME)
 
+
     def test_parser_errors(self):
         self.assertRaises(AttributeError, parser.BITdo, (self.badFreq))
         self.assertRaises(AttributeError, parser.BITdo, (self.badStartTime))
@@ -71,12 +72,14 @@ class test_pipeline(unittest.TestCase):
         self.assertEquals(s[1].getStreaks(), [3])
         self.assertEquals(s[1].getStreakExp(2), [9])
 
+
     def test_aggregator_bools(self):
         b = [True, False, False, True, False]
         s = aggregator.streaksIn(b)
         self.assertEquals(s[True].getStreaks(), [1, 1])
         self.assertEquals(s[False].getStreaks(), [2, 1])
         self.assertEquals(s[False].getStreakExp(2), [4, 1])
+
 
     def test_aggregator_strings(self):
         c = ["cat", "826", "826", "826", "~~", "~~", "cat", "cat", "~~"]
@@ -87,6 +90,7 @@ class test_pipeline(unittest.TestCase):
         self.assertEquals(s["826"].getStreakExp(3), [27])
         self.assertEquals(s["~~"].getStreaks(), [2, 1])
         self.assertEquals(s["~~"].getStreakExp(-1), [0.5, 1])
+
 
     def test_aggregator_average(self):
         bitdo = parser.BITdo(self.src)
@@ -116,56 +120,54 @@ class test_pipeline(unittest.TestCase):
     # Graph API
     #
     def test_post_user(self):
-        r = requests.post('http://localhost:8000/users', {
-            'userid': 'Thaddeus'})
+        r = newUser('Thaddeus')
         self.assertEquals(r.status_code, 200)
+
 
     def test_post_user_fails(self):
         r = requests.post('http://localhost:8000/users', {})
         self.assertEquals(r.status_code, 400)
 
+
     def test_post_activity(self):
-        r = requests.post('http://localhost:8000/users', {
-            'userid': 'Thaddeus'})
+        r = newUser('Thaddeus')
         self.assertEquals(r.status_code, 200)
-        r = requests.post('http://localhost:8000/activities', {
-            'userid': 'Thaddeus',
-            'name': 'Free-throw shooting'})
+        r = newActivity('Thaddeus', 'Free-throw shooting')
         self.assertEquals(r.status_code, 200)
+
 
     def test_post_activity_fails(self):
-        r = requests.post('http://localhost:8000/users', {
-            'userid': 'Thaddeus'})
+        r = newUser('Thaddeus')
         self.assertEquals(r.status_code, 200)
+
+        # Test explicitly, i.e. not using the helper function
+        # so we are able to neglect parameters
         r = requests.post('http://localhost:8000/activities', {
             'userid': 'Thaddeus'})
         self.assertEquals(r.status_code, 400)
         r = requests.post('http://localhost:8000/users', {
             'name': 'Free-throw shooting'})
         self.assertEquals(r.status_code, 400)
+
 
     def test_post_moment(self):
-        # New User
-        r = requests.post('http://localhost:8000/users', {
-            'userid': 'Thaddeus'})
+        r = newUser('Thaddeus')
+        self.assertEquals(r.status_code, 200)
+        r = newActivity('Thaddeus', 'Free-throw shooting')
         self.assertEquals(r.status_code, 200)
 
-        # New Activity
-        r = requests.post('http://localhost:8000/activities', {
-            'userid': 'Thaddeus',
-            'name': 'Free-throw shooting'})
-        self.assertEquals(r.status_code, 200)
-
-        # Good moment
-        annotations = ["make:true", "swish:true"]
-        r = requests.post('http://localhost:8000/moments', {
-            'userid': 'Thaddeus',
-            'name': 'Free-throw shooting',
-            'timestamp': now(),
-            'annotations[]': annotations})
+        r = newMoment('Thaddeus', 'Free-throw shooting', now(), ["make:true", "swish:true"])
         self.assertEquals(r.status_code, 201)
 
-        # Bad Moments -- Missing Fields
+
+    def test_post_moment_fails(self):
+        r = newUser('Thaddeus')
+        self.assertEquals(r.status_code, 200)
+        r = newActivity('Thaddeus', 'Free-throw shooting')
+        self.assertEquals(r.status_code, 200)
+
+        # Test explicitly, i.e. not using the helper function
+        # so we are able to neglect parameters
         annotations = ["make:true", "swish:true"]
         r = requests.post('http://localhost:8000/moments', {
             # missing userid
@@ -190,8 +192,57 @@ class test_pipeline(unittest.TestCase):
             'annotations': annotations})
         self.assertEquals(r.status_code, 400)
 
+
     def test_get_moment(self):
-        pass
+        r = newUser('Thaddeus')
+        self.assertEquals(r.status_code, 200)
+        r = newActivity('Thaddeus', 'Free-throw shooting')
+        self.assertEquals(r.status_code, 200)
+
+        r = newMoment('Thaddeus', 'Free-throw shooting', now(), ["make:true", "swish:true"])
+        r = newMoment('Thaddeus', 'Free-throw shooting', now(), ["make:false", "swish:false"])
+        r = newMoment('Thaddeus', 'Free-throw shooting', now(), ["make:true", "swish:false"])
+        r = getMoments('Thaddeus', 'Free-throw shooting')
+        self.assertEquals(r.status_code, 200)
+        self.assertEquals(len(r.json()), 3)
+
+##
+## Test Helpers
+##
+
+api_url = 'http://localhost:8000'
+users_url = api_url + '/users'
+activities_url = api_url + '/activities'
+moments_url = api_url + '/moments'
+
+
+def newUser(userid):
+    return requests.post(users_url, {
+        'userid': userid
+    })
+
+
+def newActivity(userid, name):
+    return requests.post(activities_url, {
+        'userid': userid,
+        'name': name
+    })
+
+
+def newMoment(userid, name, timestamp, annotations):
+    return requests.post(moments_url, {
+        'userid': userid,
+        'name': name,
+        'timestamp': timestamp,
+        'annotations[]': annotations
+    })
+
+
+def getMoments(userid, name):
+    return requests.get(moments_url, params={
+        'userid': userid,
+        'name': name
+    })
 
 
 def count(iter):

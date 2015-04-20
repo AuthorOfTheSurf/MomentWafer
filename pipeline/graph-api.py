@@ -33,6 +33,7 @@ class ActivityResource:
         else:
             resp.status = falcon.HTTP_400
 
+
 class MomentResource:
 
     def __init__(self, graph):
