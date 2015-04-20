@@ -12,7 +12,7 @@ class UserResource:
     def on_post(self, req, resp):
         if "userid" in req.params:
             self.graph.add_user(req.params["userid"])
-            resp.status = falcon.HTTP_201
+            resp.status = falcon.HTTP_200
         else:
             resp.status = falcon.HTTP_400
 
@@ -29,7 +29,7 @@ class ActivityResource:
 
         if userid != None and name != None:
             self.graph.add_activity(userid, name, description)
-            resp.status = falcon.HTTP_201
+            resp.status = falcon.HTTP_200
         else:
             resp.status = falcon.HTTP_400
 
@@ -42,13 +42,13 @@ class MomentResource:
         userid = req.params.get("userid", None)
         name = req.params.get("name", None)
         timestamp = req.params.get("timestamp", None)
-        annotations = req.params.get("annotations", "{}")
+        annotations = req.params.get("annotations[]", None)
 
         if any(p is None for p in [userid, name, timestamp, annotations]):
+            resp.status = falcon.HTTP_400
+        else:
             self.graph.add_moment(userid, name, timestamp, annotations)
             resp.status = falcon.HTTP_201
-        else:
-            resp.status = falcon.HTTP_400
 
 
 def build_app(graph):

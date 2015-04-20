@@ -40,16 +40,19 @@ class WaferService:
     """
     Annotations look like: ["make:true", "swish:true"]
     """
-    def add_moment(self, userid, name, timestamp=None, annotations=[]):
+
+    def add_moment(self, userid, name, timestamp, annotations):
         moment = Node("Moment", timestamp=timestamp)
         activity = self.get_activity(userid, name)
+
         if activity != None:
             r = Relationship(moment, "MOMENT_IN", activity)
             self.graph.create(r)
-            self.add_annotations(moment, annotations)
+        self.add_annotations(moment, annotations)
         return moment
 
     def add_annotations(self, moment, annotations):
+
         d = {}
         for e in annotations:
             e = e.split(":")
@@ -62,4 +65,3 @@ class WaferService:
 
 def now():
     return datetime.datetime.now().isoformat()
-

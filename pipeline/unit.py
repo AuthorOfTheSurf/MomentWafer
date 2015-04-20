@@ -102,8 +102,8 @@ class test_pipeline(unittest.TestCase):
         activity = self.service.add_activity(
             userid, "Free Throws", "no description")
         activityname = activity.properties["name"]
-        self.service.add_moment(userid, activityname)
-        self.service.add_moment(userid, activityname)
+        self.service.add_moment(userid, activityname, "timestamp", ["a1:true", "a2:false"])
+        self.service.add_moment(userid, activityname, "timestamp", ["a1:true", "a2:false"])
         self.assertEquals(count(self.graph.find("User")), 1)
         self.assertEquals(count(self.graph.find("Activity")), 1)
         self.assertEquals(count(self.graph.find("Moment")), 2)
@@ -115,7 +115,7 @@ class test_pipeline(unittest.TestCase):
     def test_post_user(self):
         r = requests.post('http://localhost:8000/users', {
             'userid': 'Thaddeus'})
-        self.assertEquals(r.status_code, 201)
+        self.assertEquals(r.status_code, 200)
 
     def test_post_user_fails(self):
         r = requests.post('http://localhost:8000/users', {})
@@ -124,16 +124,16 @@ class test_pipeline(unittest.TestCase):
     def test_post_activity(self):
         r = requests.post('http://localhost:8000/users', {
             'userid': 'Thaddeus'})
-        self.assertEquals(r.status_code, 201)
+        self.assertEquals(r.status_code, 200)
         r = requests.post('http://localhost:8000/activities', {
             'userid': 'Thaddeus',
             'name': 'Free-throw shooting' })
-        self.assertEquals(r.status_code, 201)
+        self.assertEquals(r.status_code, 200)
 
     def test_post_activity_fails(self):
         r = requests.post('http://localhost:8000/users', {
             'userid': 'Thaddeus'})
-        self.assertEquals(r.status_code, 201)
+        self.assertEquals(r.status_code, 200)
         r = requests.post('http://localhost:8000/activities', {
             'userid': 'Thaddeus'})
         self.assertEquals(r.status_code, 400)
@@ -145,13 +145,13 @@ class test_pipeline(unittest.TestCase):
         # New User
         r = requests.post('http://localhost:8000/users', {
             'userid': 'Thaddeus'})
-        self.assertEquals(r.status_code, 201)
+        self.assertEquals(r.status_code, 200)
 
         # New Activity
         r = requests.post('http://localhost:8000/activities', {
             'userid': 'Thaddeus',
             'name': 'Free-throw shooting' })
-        self.assertEquals(r.status_code, 201)
+        self.assertEquals(r.status_code, 200)
 
         # Good moment
         annotations = ["make:true", "swish:true"]
@@ -159,16 +159,24 @@ class test_pipeline(unittest.TestCase):
                 'userid': 'Thaddeus',
                 'name': 'Free-throw shooting',
                 'timestamp': now(),
-                'annotations': annotations})
+                'annotations[]': annotations})
         self.assertEquals(r.status_code, 201)
 
-        # Bad Moment -- Missing Fields
+        # Bad Moments -- Missing Fields
         annotations = ["make:true", "swish:true"]
         r = requests.post('http://localhost:8000/moments', {
                 # missing userid
                 'name': 'Free-throw shooting',
                 'timestamp': now(),
-                'annotations': annotations})
+                'annotations[]': annotations})
+        self.assertEquals(r.status_code, 400)
+
+        r = requests.post('http://localhost:8000/moments', {
+                'userid': 'Thaddeus',
+                'name': 'Free-throw shooting',
+                'timestamp': now()
+                # missing annotations
+                })
         self.assertEquals(r.status_code, 400)
         
 
