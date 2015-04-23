@@ -73,8 +73,7 @@ class WaferService:
             e = e.split(":")
             d[e[0]] = e[1]
         annotation = Node("Annotation", **d)
-        r = Relationship(annotation, "ANNOTATION_OF", moment)
-        self.graph.create_unique(r)
+        self.graph.create(Relationship(annotation, "ANNOTATION_OF", moment))
         return annotation, moment
 
 

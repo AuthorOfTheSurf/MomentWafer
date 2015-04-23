@@ -206,6 +206,20 @@ class test_pipeline(unittest.TestCase):
         self.assertEquals(r.status_code, 200)
         self.assertEquals(len(r.json()), 3)
 
+
+    def test_get_moment_fails(self):
+        r = newUser('Thaddeus')
+        self.assertEquals(r.status_code, 200)
+        r = newActivity('Thaddeus', 'Basketball')
+        self.assertEquals(r.status_code, 200)
+
+        newMoment('Thaddeus', 'Free-throw shooting', now(), ["make:true", "swish:true"])
+        newMoment('Thaddeus', 'Free-throw shooting', now(), ["make:false", "swish:false"])
+        newMoment('Thaddeus', 'Free-throw shooting', now(), ["make:true", "swish:false"])
+        # wrong acitivity name
+        r = getMoments('Thaddeus', 'B_sketb_ll')
+        self.assertEquals(r.status_code, 400)
+
 ##
 ## Test Helpers
 ##
