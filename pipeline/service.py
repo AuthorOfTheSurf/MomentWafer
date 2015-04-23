@@ -9,6 +9,12 @@ activity_of_user = """
     AND     a.name = {activity_name}
     RETURN  a
 """
+moments_of_activity = """
+    MATCH   (u:User)-[:DOES]->(a:Activity)<--(m:Moment)
+    WHERE   u.userid = {userid}
+    AND     a.name = {activity_name}
+    RETURN  m
+"""
 
 
 class WaferService:
@@ -51,8 +57,17 @@ class WaferService:
         self.add_annotations(moment, annotations)
         return moment
 
-    def add_annotations(self, moment, annotations):
+    def get_moments(self, userid, name):
+        query = moments_of_activity
+        params = {
+            'userid': userid,
+            'activity_name': name
+        }
+        stream = self.graph.cypher.stream(query, params)
+        results = [{ "timestamp": r[0]["timestamp"] } for r in stream]
+        return json.dumps(results)
 
+    def add_annotations(self, moment, annotations):
         d = {}
         for e in annotations:
             e = e.split(":")

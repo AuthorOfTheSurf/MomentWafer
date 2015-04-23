@@ -199,9 +199,9 @@ class test_pipeline(unittest.TestCase):
         r = newActivity('Thaddeus', 'Free-throw shooting')
         self.assertEquals(r.status_code, 200)
 
-        r = newMoment('Thaddeus', 'Free-throw shooting', now(), ["make:true", "swish:true"])
-        r = newMoment('Thaddeus', 'Free-throw shooting', now(), ["make:false", "swish:false"])
-        r = newMoment('Thaddeus', 'Free-throw shooting', now(), ["make:true", "swish:false"])
+        newMoment('Thaddeus', 'Free-throw shooting', now(), ["make:true", "swish:true"])
+        newMoment('Thaddeus', 'Free-throw shooting', now(), ["make:false", "swish:false"])
+        newMoment('Thaddeus', 'Free-throw shooting', now(), ["make:true", "swish:false"])
         r = getMoments('Thaddeus', 'Free-throw shooting')
         self.assertEquals(r.status_code, 200)
         self.assertEquals(len(r.json()), 3)

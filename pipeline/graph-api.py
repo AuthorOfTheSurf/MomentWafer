@@ -51,6 +51,18 @@ class MomentResource:
             self.graph.add_moment(userid, name, timestamp, annotations)
             resp.status = falcon.HTTP_201
 
+    """All moments of the Activity"""
+    def on_get(self, req, resp):
+        userid = req.params.get("userid", None)
+        name = req.params.get("name", None)
+        activity = self.graph.get_activity(userid, name)
+
+        if activity == None:
+            resp.status = falcon.HTTP_400
+        else:
+            resp.status = falcon.HTTP_200
+            resp.body = self.graph.get_moments(userid, name)
+
 
 def build_app(graph):
     app = falcon.API()
