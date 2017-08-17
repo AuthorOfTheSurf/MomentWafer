@@ -1,11 +1,5 @@
-# MATL
-## Muscle Activation Through Layers
+# MomentWafer
+## A system for tracking muscle activation in repetitive athletic movements
 =====
 
-A hardware system utilizing the BITalino to track muscle activation.
-
-
-- Implemented as a family of Python scripts acting on raw data inputs
-- JSON as a data format
-- Clean GUI client for data-viewing pleasure
-- More info to come soon..
+2017-08-17: Project updates coming soon
